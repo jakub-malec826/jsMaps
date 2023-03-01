@@ -33,44 +33,60 @@ export default function MapPage() {
 	);
 
 	const [price, setPrice] = useState<number>(1);
-	let sum = price * totalDistance * 1.1;
+	let sum = calculateTravelCost(totalDistance, price);
 
-		return (
-			<div className="map">
-				<Button variant="text" color="primary">
-					<Link to="/jsMaps">Back</Link>
-				</Button>
-				<MapContainer
-					center={[51.505, -0.09]}
-					zoom={13}
-					scrollWheelZoom={false}
-				>
-					<TileLayer
-						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-					/>
-					<MatchRoute position={position} />
-					<Control position="bottomleft">
-						<div className="distance">
-							<TextField
-								id="price"
-								label="price for km"
-								type="number"
-								variant="standard"
-								value={price}
-								onChange={(e) =>
-									setPrice(Number(e.target.value))
-								}
-							/>
-						</div>
-					</Control>
-					<Control position="bottomleft">
-						<ul className="distance">
-							<li>Distance: {totalDistance.toFixed(1)} km</li>
-							<li>Travel cost: {sum.toFixed(2)} zł </li>
-						</ul>
-					</Control>
-				</MapContainer>
-			</div>
-		);
+	return (
+		<div className="map">
+			<Button variant="text" color="primary">
+				<Link to="/jsMaps/">Back</Link>
+			</Button>
+			<MapContainer
+				center={[51.505, -0.09]}
+				zoom={13}
+				scrollWheelZoom={false}
+			>
+				<TileLayer
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+				/>
+				<MatchRoute position={position} />
+				<Control position="bottomleft">
+					<div className="distance">
+						<TextField
+							id="price"
+							label="price for km"
+							type="number"
+							variant="standard"
+							value={price}
+							onChange={(e) => setPrice(Number(e.target.value))}
+						/>
+					</div>
+				</Control>
+				<Control position="bottomleft">
+					<ul className="distance">
+						<li>Distance: {totalDistance.toFixed(1)} km</li>
+						<li>Travel cost: {sum.cost.toFixed(2)} zł </li>
+						<li>Travel time: {sum.duration}h </li>
+
+					</ul>
+				</Control>
+			</MapContainer>
+		</div>
+	);
+}
+
+function calculateTravelCost(
+	distance: number,
+	costPerKm: number
+): { duration: number; cost: number } {
+	const maxDistancePerDay = 800;
+	const costPerDay = 1000;
+
+	const totalCost = costPerKm * distance * 1.1; 
+	const totalDays = Math.ceil(distance / maxDistancePerDay);
+	const totalDuration = totalDays * 24;
+
+	const travelCost = totalCost + totalDays * costPerDay;
+
+	return { duration: totalDuration, cost: travelCost };
 }
