@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
 import { RootType } from "../store/Store";
+import GetRoute from "../API/GetRoute";
 
 export default function MapPage() {
 	const totalDistance = useSelector(
@@ -32,8 +33,13 @@ export default function MapPage() {
 		(state: RootType) => state.positionReducer.position
 	);
 
-	const [price, setPrice] = useState<number>(4);
+	const [price, setPrice] = useState<number>(1);
 	let sum = price * totalDistance * 1.1;
+
+	
+	if (position[0].lat !== 0) GetRoute(position[0], position[1], price);
+
+	
 
 	return (
 		<div className="map">

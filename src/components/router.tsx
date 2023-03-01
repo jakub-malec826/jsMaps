@@ -4,11 +4,11 @@ import SearchPage from "../pages/SearchPage";
 
 export default createBrowserRouter([
 	{
-		path: "/",
+		path: "/jsMaps",
 		element: <SearchPage />,
 	},
 	{
-		path: "map/",
+		path: "jsMaps/map/",
 		element: <MapPage />,
 	},
 ]);
