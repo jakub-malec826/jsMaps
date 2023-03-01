@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
@@ -23,7 +23,6 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
 import { RootType } from "../store/Store";
-import GetRoute from "../API/GetRoute";
 
 export default function MapPage() {
 	const totalDistance = useSelector(
@@ -36,45 +35,42 @@ export default function MapPage() {
 	const [price, setPrice] = useState<number>(1);
 	let sum = price * totalDistance * 1.1;
 
-	
-	if (position[0].lat !== 0) GetRoute(position[0], position[1], price);
-
-	
-
-	return (
-		<div className="map">
-			<Button variant="text" color="primary">
-				<Link to="/">Back</Link>
-			</Button>
-			<MapContainer
-				center={[51.505, -0.09]}
-				zoom={13}
-				scrollWheelZoom={false}
-			>
-				<TileLayer
-					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-				/>
-				<MatchRoute position={position} />
-				<Control position="bottomleft">
-					<div className="distance">
-						<TextField
-							id="price"
-							label="price for km"
-							type="number"
-							variant="standard"
-							value={price}
-							onChange={(e) => setPrice(Number(e.target.value))}
-						/>
-					</div>
-				</Control>
-				<Control position="bottomleft">
-					<ul className="distance">
-						<li>Distance: {totalDistance.toFixed(1)} km</li>
-						<li>Travel cost: {sum.toFixed(2)} zł </li>
-					</ul>
-				</Control>
-			</MapContainer>
-		</div>
-	);
+		return (
+			<div className="map">
+				<Button variant="text" color="primary">
+					<Link to="/jsMaps">Back</Link>
+				</Button>
+				<MapContainer
+					center={[51.505, -0.09]}
+					zoom={13}
+					scrollWheelZoom={false}
+				>
+					<TileLayer
+						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					/>
+					<MatchRoute position={position} />
+					<Control position="bottomleft">
+						<div className="distance">
+							<TextField
+								id="price"
+								label="price for km"
+								type="number"
+								variant="standard"
+								value={price}
+								onChange={(e) =>
+									setPrice(Number(e.target.value))
+								}
+							/>
+						</div>
+					</Control>
+					<Control position="bottomleft">
+						<ul className="distance">
+							<li>Distance: {totalDistance.toFixed(1)} km</li>
+							<li>Travel cost: {sum.toFixed(2)} zł </li>
+						</ul>
+					</Control>
+				</MapContainer>
+			</div>
+		);
 }
